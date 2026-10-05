@@ -182,6 +182,30 @@ object JsonSpec extends ZIOSpecDefault {
           )
 
           assertTrue(obj1 != obj2 && obj2 != obj1)
+        },
+        test("equality fails when duplicate keys stand in for distinct keys (#1600)") {
+          val obj1 = Json.Obj(
+            "a" -> Json.Str("x"),
+            "b" -> Json.Str("x")
+          )
+          val obj2 = Json.Obj(
+            "a" -> Json.Str("x"),
+            "a" -> Json.Str("x")
+          )
+
+          assertTrue(obj1 != obj2 && obj2 != obj1)
+        },
+        test("equality holds for identical objects with duplicate keys") {
+          val obj1 = Json.Obj(
+            "a" -> Json.Num(1),
+            "a" -> Json.Num(2)
+          )
+          val obj2 = Json.Obj(
+            "a" -> Json.Num(1),
+            "a" -> Json.Num(2)
+          )
+
+          assertTrue(obj1 == obj2 && obj2 == obj1)
         }
       ),
       suite("hashCode")(
